@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  loans-applications-service:
+    image: dcs-loans-applications:latest
+    build:
+      context: ./Loans.Application
+      dockerfile: Dockerfile
+    volumes:
+      - ./loans-application/appsettings.json:/app/appsettings.json
+    ports:
+      - "2023:80"
+    networks:
+      - dcs-bank
+
+  api-gateway-service:
+    image: nickholas/dcs-api-gateway:latest
+    ports:
+      - "2100:80"
+    volumes:
+      - ./api-gateway-service/appsettings.json:/app/appsettings.json
+    networks:
+      - dcs-bank
+    depends_on:
+      - loans-applications-service
+
+  decision-maker-service:
+    image: nickholas/dcs-decision-maker-service:latest
+    container_name: decision-maker-service
+    ports:
+      - "2001:80"
+    depends_on:
+      - decision-maker-service-db
+    volumes:
+      - ./decision-maker-service/appsettings.json:/app/appsettings.json
+    networks:
+      - dcs-bank
+  
+  decision-maker-service-db:
+    image: postgres:latest
+    container_name: decision-maker-service-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "product_catalog"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "111111"
+    networks:
+      - dcs-bank
+        
+  emailing-service:
+    image: nickholas/dcs-emailing-service:latest
+    volumes:
+     - ./emailing-service/appsettings.json:/app/appsettings.json
+    networks:
+      - dcs-bank
+
+networks:
+  dcs-bank:
+    driver: bridge

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\Loans.Application.AppServices.xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\Loans.Application.AppServices.xml</DocumentationFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="DCS.DecisionMakerService.Client.Api" Version="1.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Loans.Application.AppServices.Contracts\Loans.Application.AppServices.Contracts.csproj" />
+    </ItemGroup>
+</Project>
